@@ -1,4 +1,4 @@
-module auth-aca
+module github.com/j94veron/auth-service-insu
 
 go 1.24
 
