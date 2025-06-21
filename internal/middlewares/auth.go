@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"strings"
 
-	"auth-aca/pkg/redis"
-	"auth-aca/pkg/token"
 	"github.com/gin-gonic/gin"
+	"github.com/j94veron/auth-service-insu/pkg/redis"
+	"github.com/j94veron/auth-service-insu/pkg/token"
 )
 
 type AuthMiddleware struct {

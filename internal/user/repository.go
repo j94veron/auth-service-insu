@@ -1,8 +1,8 @@
 package user
 
 import (
-	"auth-aca/internal/models"
 	"errors"
+	"github.com/j94veron/auth-service-insu/internal/models"
 	"gorm.io/gorm"
 )
 

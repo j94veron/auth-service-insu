@@ -3,9 +3,9 @@ package middlewares
 import (
 	"net/http"
 
-	"auth-aca/internal/role"
-	"auth-aca/internal/user"
 	"github.com/gin-gonic/gin"
+	"github.com/j94veron/auth-service-insu/internal/role"
+	"github.com/j94veron/auth-service-insu/internal/user"
 )
 
 type PermissionMiddleware struct {

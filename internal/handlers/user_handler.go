@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"auth-aca/internal/models"
-	"auth-aca/internal/user"
 	"github.com/gin-gonic/gin"
+	"github.com/j94veron/auth-service-insu/internal/models"
+	"github.com/j94veron/auth-service-insu/internal/user"
 	"golang.org/x/crypto/bcrypt"
 )
 

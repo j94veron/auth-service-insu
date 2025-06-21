@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"auth-aca/internal/models"
-	"auth-aca/pkg/token"
+	"github.com/j94veron/auth-service-insu/internal/models"
+	"github.com/j94veron/auth-service-insu/pkg/token"
 )
 
 // RefreshToken handles the request to refresh the token

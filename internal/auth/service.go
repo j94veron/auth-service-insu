@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"auth-aca/internal/models"
-	"auth-aca/internal/user"
-	"auth-aca/pkg/redis"
-	"auth-aca/pkg/token"
+	"github.com/j94veron/auth-service-insu/internal/models"
+	"github.com/j94veron/auth-service-insu/internal/user"
+	"github.com/j94veron/auth-service-insu/pkg/redis"
+	"github.com/j94veron/auth-service-insu/pkg/token"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"auth-aca/internal/models"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
+	"github.com/j94veron/auth-service-insu/internal/models"
 )
 
 type TokenService struct {

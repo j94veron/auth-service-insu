@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
-	"auth-aca/internal/auth"
 	"github.com/gin-gonic/gin"
+	"github.com/j94veron/auth-service-insu/internal/auth"
 )
 
 type AuthHandler struct {

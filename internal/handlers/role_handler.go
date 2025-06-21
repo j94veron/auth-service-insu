@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"auth-aca/internal/models"
-	"auth-aca/internal/role"
 	"github.com/gin-gonic/gin"
+	"github.com/j94veron/auth-service-insu/internal/models"
+	"github.com/j94veron/auth-service-insu/internal/role"
 )
 
 type RoleHandler struct {

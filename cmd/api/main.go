@@ -9,14 +9,14 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"auth-aca/internal/auth"
-	"auth-aca/internal/handlers"
-	"auth-aca/internal/middlewares"
-	"auth-aca/internal/models"
-	"auth-aca/internal/role"
-	"auth-aca/internal/user"
-	"auth-aca/pkg/redis"
-	"auth-aca/pkg/token"
+	"github.com/j94veron/auth-service-insu/internal/auth"
+	"github.com/j94veron/auth-service-insu/internal/handlers"
+	"github.com/j94veron/auth-service-insu/internal/middlewares"
+	"github.com/j94veron/auth-service-insu/internal/models"
+	"github.com/j94veron/auth-service-insu/internal/role"
+	"github.com/j94veron/auth-service-insu/internal/user"
+	"github.com/j94veron/auth-service-insu/pkg/redis"
+	"github.com/j94veron/auth-service-insu/pkg/token"
 )
 
 func main() {
