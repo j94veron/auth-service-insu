@@ -28,7 +28,7 @@ func (r *repository) FindByID(id uint) (*models.Role, error) {
 	var role models.Role
 	if err := r.db.Preload("Permissions").First(&role, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("rol no encontrado")
+			return nil, errors.New("role not found")
 		}
 		return nil, err
 	}
@@ -75,9 +75,9 @@ func (r *repository) GetRoleName(roleID uint) (string, error) {
 	var role models.Role
 	if err := r.db.First(&role, roleID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return "", errors.New("rol no encontrado")
+			return "", errors.New("role not found")
 		}
-		return "", err // Propagamos otros errores
+		return "", err // Propagate other errors
 	}
-	return role.Name, nil // Devuelve el nombre del rol
+	return role.Name, nil // Returns the name of the role
 }

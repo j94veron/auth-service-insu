@@ -1,0 +1,9 @@
+{"level":"info","ts":1750702204.7183754,"caller":"api/main.go:116","msg":"Starting server on 8090"}
+{"level":"error","ts":1750702204.7184753,"caller":"api/main.go:118","msg":"Server error: listen tcp: address 8090: missing port in address","stacktrace":"main.main\n\t/home/jveron/Escritorio/DEV/auth-service-insu/cmd/api/main.go:118\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:283"}
+{"level":"info","ts":1750702230.055792,"caller":"api/main.go:116","msg":"Starting server on 8090"}
+{"level":"error","ts":1750702230.0558786,"caller":"api/main.go:118","msg":"Server error: listen tcp: address 8090: missing port in address","stacktrace":"main.main\n\t/home/jveron/Escritorio/DEV/auth-service-insu/cmd/api/main.go:118\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:283"}
+{"level":"info","ts":1750702294.875779,"caller":"api/main.go:116","msg":"Starting server on :8090"}
+{"level":"info","ts":1750702351.9491978,"caller":"api/main.go:116","msg":"Starting server on :8090"}
+{"level":"error","ts":1750702831.5564394,"caller":"api/main.go:24","msg":"Error loading .env file: open ../.env: no such file or directory","stacktrace":"main.main\n\t/home/jveron/Escritorio/DEV/auth-service-insu/cmd/api/main.go:24\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:283"}
+{"level":"info","ts":1750702831.5566814,"caller":"api/main.go:32","msg":"Successfully loaded .env from root"}
+{"level":"info","ts":1750702831.5675628,"caller":"api/main.go:117","msg":"Starting server on :8090"}

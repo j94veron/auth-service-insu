@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"github.com/j94veron/auth-service-insu/logger"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/j94veron/auth-service-insu/internal/models"
@@ -10,22 +12,27 @@ import (
 
 // RefreshToken handles the request to refresh the token
 func RefreshToken(w http.ResponseWriter, r *http.Request) {
-	// Crea una instancia de TokenService con los secretos apropiados
-	tokenService := token.NewTokenService("your_access_secret", "your_refresh_secret") // Sustituye por tus secretos reales
+	// Create a TokenService instance with the appropriate secrets
+	accessSecret := os.Getenv("JWT_ACCESS_SECRET")
+	refreshSecret := os.Getenv("JWT_REFRESH_SECRET")
+	tokenService := token.NewTokenService(accessSecret, refreshSecret)
 
 	refreshToken := r.Header.Get("Authorization")
 	if refreshToken == "" {
+		logger.Logger.Error("Refresh token required.")
 		http.Error(w, "Missing refresh token", http.StatusBadRequest)
 		return
 	}
 
 	claims, err := tokenService.ValidateRefreshToken(refreshToken)
 	if err != nil {
+		logger.Logger.Error("Invalid Token " + err.Error())
 		http.Error(w, "Invalid refresh token", http.StatusUnauthorized)
 		return
 	}
 
 	if time.Now().Unix() > claims.ExpiresAt {
+		logger.Logger.Error("Refresh token expired")
 		http.Error(w, "Refresh token expired", http.StatusUnauthorized)
 		return
 	}
@@ -42,6 +49,7 @@ func RefreshToken(w http.ResponseWriter, r *http.Request) {
 
 	tokens, err := tokenService.GenerateTokens(&user) // Generar nuevos tokens
 	if err != nil {
+		logger.Logger.Error(err.Error())
 		http.Error(w, "Token generation failed", http.StatusInternalServerError)
 		return
 	}

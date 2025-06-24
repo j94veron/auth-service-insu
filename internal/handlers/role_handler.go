@@ -37,8 +37,7 @@ func (h *RoleHandler) Create(c *gin.Context) {
 		Description: req.Description,
 	}
 
-	// Aquí se deberían agregar las referencias a los permisos
-	// basado en los IDs proporcionados en req.Permissions
+	// based on the IDs provided in req.Permissions
 
 	if err := h.roleRepo.Create(&role); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -99,7 +98,7 @@ func (h *RoleHandler) Update(c *gin.Context) {
 		return
 	}
 
-	// Actualizar solo los campos proporcionados
+	// Update only the provided fields
 	if req.Name != "" {
 		role.Name = req.Name
 	}
@@ -107,7 +106,7 @@ func (h *RoleHandler) Update(c *gin.Context) {
 		role.Description = req.Description
 	}
 
-	// Aquí se actualizarían los permisos
+	// Permissions are updated
 
 	if err := h.roleRepo.Update(role); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

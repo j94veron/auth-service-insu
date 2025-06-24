@@ -27,23 +27,25 @@ func NewService(userRepo user.Repository, tokenService *token.TokenService, redi
 }
 
 func (s *Service) Login(email, password, endpoint string) (*models.TokenDetail, *models.User, error) {
+	// Check if the email exists
 	user, err := s.userRepo.FindByEmail(email)
 	if err != nil {
-		return nil, nil, errors.New("usuario no encontrado")
+		return nil, nil,
+			errors.New("usuario no encontrado")
 	}
 
-	// Verificar contraseña
+	// Verify password
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 		return nil, nil, errors.New("contraseña incorrecta")
 	}
 
-	// Generar tokens
+	// Generate token
 	td, err := s.tokenService.CreateTokens(user)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	// Guardar tokens en Redis
+	// Save token in Redis
 	ctx := context.Background()
 	if err := s.redisClient.SaveToken(ctx, td.AccessUuid, user.ID, time.Until(td.AtExpires)); err != nil {
 		return nil, nil, err
@@ -57,32 +59,33 @@ func (s *Service) Login(email, password, endpoint string) (*models.TokenDetail, 
 }
 
 func (s *Service) Refresh(refreshToken string) (*models.TokenDetail, error) {
-	// Verificar refresh token
+
+	// Check refresh token
 	claims, err := s.tokenService.VerifyToken(refreshToken, true)
 	if err != nil {
 		return nil, errors.New("refresh token inválido")
 	}
 
-	// Verificar si el token está en Redis
+	// Check if the token is in Redis
 	ctx := context.Background()
 	_, err = s.redisClient.GetUserID(ctx, claims.TokenUuid)
 	if err != nil {
 		return nil, errors.New("refresh token revocado o expirado")
 	}
 
-	// Buscar usuario
+	// Search user
 	user, err := s.userRepo.FindByID(claims.UserID)
 	if err != nil {
 		return nil, errors.New("usuario no encontrado")
 	}
 
-	// Generar nuevos tokens
+	// Generate new tokens
 	td, err := s.tokenService.CreateTokens(user)
 	if err != nil {
 		return nil, err
 	}
 
-	// Eliminar el viejo refresh token y guardar los nuevos
+	// Delete the old refresh token and save the new ones
 	if err := s.redisClient.DeleteToken(ctx, claims.TokenUuid); err != nil {
 		return nil, err
 	}
@@ -99,7 +102,7 @@ func (s *Service) Refresh(refreshToken string) (*models.TokenDetail, error) {
 }
 
 func (s *Service) hasPermissionForEndpoint(user *models.User, endpoint string) bool {
-	// Verificar si el rol del usuario tiene permiso para el endpoint
+	//Check if the user role has permission for the endpoint
 	for _, perm := range user.Role.Permissions {
 		if perm.Endpoint == endpoint {
 			return true

@@ -46,7 +46,7 @@ func (am *AuthMiddleware) AuthRequired() gin.HandlerFunc {
 			return
 		}
 
-		// Verificar si el token está en Redis/blacklist
+		// Check if the token is in Redis/blacklist
 		ctx := context.Background()
 		userID, err := am.redisClient.GetUserID(ctx, claims.TokenUuid)
 		if err != nil {
@@ -55,14 +55,14 @@ func (am *AuthMiddleware) AuthRequired() gin.HandlerFunc {
 			return
 		}
 
-		// Verificar que el userID en Redis coincida con el del token
+		// Verify that the userID in Redis matches the one in the token
 		if userID != claims.UserID {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token ownership"})
 			c.Abort()
 			return
 		}
 
-		// Agregar los datos del token al contexto para usar en los handlers
+		// token al contexto para usar en los handlers
 		c.Set("userID", claims.UserID)
 		c.Set("userName", claims.Name)
 		c.Set("userLastName", claims.LastName)

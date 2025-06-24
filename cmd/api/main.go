@@ -1,14 +1,12 @@
 package main
 
 import (
+	"github.com/j94veron/auth-service-insu/internal/config"
+	"github.com/j94veron/auth-service-insu/logger"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-
 	"github.com/j94veron/auth-service-insu/internal/auth"
 	"github.com/j94veron/auth-service-insu/internal/handlers"
 	"github.com/j94veron/auth-service-insu/internal/middlewares"
@@ -17,40 +15,39 @@ import (
 	"github.com/j94veron/auth-service-insu/internal/user"
 	"github.com/j94veron/auth-service-insu/pkg/redis"
 	"github.com/j94veron/auth-service-insu/pkg/token"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Cargar archivo .env desde /app (desde Docker)
-	if err := godotenv.Load("/app/.env"); err != nil {
-		log.Printf("Error loading .env file: %v", err)
+	// Upload .env files
+	if err := godotenv.Load("../.env"); err != nil {
+		logger.Logger.Error("Error loading .env file: " + err.Error())
 	} else {
-		log.Println("Successfully loaded .env from /app")
+		logger.Logger.Info("Successfully loaded .env from /app")
 	}
-	// Cargar variables de entorno
 	if err := godotenv.Load(); err != nil {
-		log.Printf("Error loading .env file")
+		logger.Logger.Error("Error loading .env file: " + err.Error())
 	} else {
-		log.Println("Successfully loaded .env from root")
+		logger.Logger.Info("Successfully loaded .env from root")
 	}
 
-	// Conectar a la base de datos
-	dsn := os.Getenv("DB_DSN")
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	//Connect to the database using the new package
+	db, err := config.ConnectDB()
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		logger.Logger.Error("Error connecting to database: " + err.Error())
 	}
 
-	// Auto-migrar modelos
+	// Auto-migrate models
 	db.AutoMigrate(&models.User{}, &models.Role{}, &models.Permission{})
 
-	// Inicializar Redis (opcional)
+	//Initialize Redis (optional)
 	redisClient := redis.NewClient(
 		os.Getenv("REDIS_ADDR"),
 		os.Getenv("REDIS_PASSWORD"),
 		0,
 	)
 
-	// Inicializar servicios y repositorios
+	// Initialize services and repositories
 	userRepo := user.NewRepository(db)
 	roleRepo := role.NewRepository(db)
 
@@ -61,16 +58,16 @@ func main() {
 
 	authService := auth.NewService(userRepo, tokenService, redisClient)
 
-	// Inicializar handlers
+	// Initialize handlers
 	authHandler := handlers.NewAuthHandler(authService)
 	userHandler := handlers.NewUserHandler(userRepo)
 	roleHandler := handlers.NewRoleHandler(roleRepo)
 
-	// Inicializar middlewares
+	// Initialize middlewares
 	authMiddleware := middlewares.NewAuthMiddleware(tokenService, redisClient)
 	permMiddleware := middlewares.NewPermissionMiddleware(userRepo, roleRepo)
 
-	// Configurar router
+	// Configure router
 	r := gin.Default()
 
 	// CORS middleware
@@ -87,21 +84,21 @@ func main() {
 		c.Next()
 	})
 
-	// Rutas públicas
+	// Public routes
 	r.POST("/api/login", authHandler.Login)
 	r.POST("/api/refresh", authHandler.Refresh)
 
-	// Rutas protegidas
+	// Protected routes
 	api := r.Group("/api", authMiddleware.AuthRequired())
 	{
-		// Usuarios
+		// User
 		api.GET("/users", permMiddleware.HasPermission("/api/users"), userHandler.List)
 		api.GET("/users/:id", permMiddleware.HasPermission("/api/users"), userHandler.GetByID)
 		api.POST("/users", permMiddleware.HasPermission("/api/users"), userHandler.Create)
 		api.PUT("/users/:id", permMiddleware.HasPermission("/api/users"), userHandler.Update)
 		api.DELETE("/users/:id", permMiddleware.HasPermission("/api/users"), userHandler.Delete)
 
-		// Roles
+		// Role
 		api.GET("/roles", permMiddleware.HasPermission("/api/roles"), roleHandler.List)
 		api.GET("/roles/:id", permMiddleware.HasPermission("/api/roles"), roleHandler.GetByID)
 		api.POST("/roles", permMiddleware.HasPermission("/api/roles"), roleHandler.Create)
@@ -109,14 +106,15 @@ func main() {
 		api.DELETE("/roles/:id", permMiddleware.HasPermission("/api/roles"), roleHandler.Delete)
 	}
 
-	// Iniciar servidor
+	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8085"
+		port = "8090"
 	}
 
-	log.Printf("Server running on port %s", port)
-	if err := r.Run(":" + port); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+	logger.Logger.Info("Starting server on " + port)
+	if err := r.Run(port); err != nil {
+		logger.Logger.Error("Server error: " + err.Error())
+		log.Fatal(err)
 	}
 }

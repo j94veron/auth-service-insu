@@ -94,7 +94,7 @@ type UpdateUserRequest struct {
 	CommercialZone string `json:"commercialZone"`
 	Warehouse      string `json:"warehouse"`
 	RoleID         uint   `json:"roleId"`
-	Password       string `json:"password"` // Opcional para actualizar
+	Password       string `json:"password"`
 }
 
 func (h *UserHandler) Update(c *gin.Context) {
@@ -116,7 +116,7 @@ func (h *UserHandler) Update(c *gin.Context) {
 		return
 	}
 
-	// Actualizar solo los campos proporcionados
+	// Updates only the provided fields
 	if req.Name != "" {
 		user.Name = req.Name
 	}

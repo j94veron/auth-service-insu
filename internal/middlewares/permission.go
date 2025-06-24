@@ -38,27 +38,18 @@ func (pm *PermissionMiddleware) HasPermission(endpoint string) gin.HandlerFunc {
 			return
 		}
 
-		// Verificar si el rol coincide con los roles permitidos
-		roleName, err := pm.roleRepo.GetRoleName(roleID.(uint)) // Asegúrate de tener este método para obtener el nombre del rol
+		// Check if the role matches the allowed roles
+		roleName, err := pm.roleRepo.GetRoleName(roleID.(uint))
 		if err != nil || !pm.roleIsAllowed(roleName) {
-			c.JSON(http.StatusForbidden, gin.H{"error": "No tienes permiso para acceder a este recurso"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this resource."})
 			c.Abort()
 			return
 		}
 
-		// Verificar si el rol tiene permiso para este endpoint
-		//hasPermission, err := pm.roleRepo.CheckPermission(roleID.(uint), endpoint, c.Request.Method)
-		//if err != nil || !hasPermission {
-		//	c.JSON(http.StatusForbidden, gin.H{"error": "No tienes permiso para acceder a este recurso"})
-		//	c.Abort()
-		//	return
-		//}
-
-		// Ejemplo de verificación adicional basada en el usuario
-		// Por ejemplo, verifica si el usuario tiene alguna restricción específica
+		// Check if the user has any specific restrictions
 		userRestricted, err := pm.userRepo.IsUserRestricted(userID.(uint))
 		if err != nil || userRestricted {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Tu cuenta tiene restricciones"})
+			c.JSON(http.StatusForbidden, gin.H{"error": "Your account has restrictions"})
 			c.Abort()
 			return
 		}
@@ -67,7 +58,7 @@ func (pm *PermissionMiddleware) HasPermission(endpoint string) gin.HandlerFunc {
 	}
 }
 
-// roleIsAllowed verifica si el rol dado está en la lista de roles permitidos
+// roleIsAllowed checks if the given role is in the list of allowed roles
 func (pm *PermissionMiddleware) roleIsAllowed(roleName string) bool {
 	for _, allowedRole := range pm.allowedRoles {
 		if allowedRole == roleName {

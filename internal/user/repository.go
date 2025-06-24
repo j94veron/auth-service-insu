@@ -15,7 +15,7 @@ type Repository interface {
 	Delete(id uint) error
 	List() ([]models.User, error)
 
-	// Nueva función para verificar restricciones del usuario
+	// New feature to check user restrictions
 	IsUserRestricted(id uint) (bool, error)
 }
 
@@ -31,7 +31,7 @@ func (r *repository) FindByID(id uint) (*models.User, error) {
 	var user models.User
 	if err := r.db.Preload("Role.Permissions").First(&user, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("usuario no encontrado")
+			return nil, errors.New("user not found\n")
 		}
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (r *repository) FindByEmail(email string) (*models.User, error) {
 	var user models.User
 	if err := r.db.Preload("Role.Permissions").Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("correo no encontrado")
+			return nil, errors.New("mail not found")
 		}
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (r *repository) FindByUsername(username string) (*models.User, error) {
 	var user models.User
 	if err := r.db.Preload("Role.Permissions").Where("username = ?", username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("usuario no encontrado")
+			return nil, errors.New("user not found")
 		}
 		return nil, err
 	}
@@ -85,14 +85,5 @@ func (r *repository) IsUserRestricted(id uint) (bool, error) {
 	if err := r.db.First(&user, id).Error; err != nil {
 		return false, err
 	}
-
-	// Aquí implementa tu lógica para verificar si el usuario está restringido
-	// Por ejemplo, podrías tener un campo en tu modelo de usuario:
-	// return user.IsRestricted, nil
-
-	// O verificar alguna otra condición:
-	// return user.Status != "active", nil
-
-	// Por ahora, simplemente devolvemos false (no restringido)
 	return false, nil
 }

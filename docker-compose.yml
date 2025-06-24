@@ -6,5 +6,5 @@ services:
       context: .
       dockerfile: Dockerfile
     env_file:
-      - .env  # Esta línea asegura que se carga el archivo .env
-    network_mode: host  # Mantener en modo host
+      - .env
+    network_mode: host
