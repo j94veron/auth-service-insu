@@ -27,7 +27,7 @@ COPY --from=builder /app/auth-aca /auth-aca
 COPY --from=builder /app/.env /app/.env
 
 # Expone el puerto que utilizará la aplicación
-EXPOSE 8085
+EXPOSE 8090
 
 # Comando que se ejecutará al iniciar el contenedor
 CMD ["/auth-aca"]

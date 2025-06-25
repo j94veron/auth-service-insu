@@ -86,7 +86,7 @@ func main() {
 
 	// Public routes
 	r.POST("/api/login", authHandler.Login)
-	r.POST("/api/refresh", authHandler.Refresh)
+	r.POST("/api/refresh_token", authHandler.Refresh)
 
 	// Protected routes
 	api := r.Group("/api", authMiddleware.AuthRequired())
