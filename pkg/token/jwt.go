@@ -25,6 +25,7 @@ type TokenClaims struct {
 	RoleID         uint   `json:"role_id"`
 	OtherWarehouse string `json:"other_warehouse"`
 	Province       string `json:"province"`
+	Reports        string `json:"reports"`
 	TokenUuid      string `json:"token_uuid"`
 }
 
@@ -68,6 +69,7 @@ func (t *TokenService) CreateTokens(user *models.User) (*models.TokenDetail, err
 		OtherWarehouse: user.OtherWarehouse,
 		Province:       user.Province,
 		RoleID:         user.RoleID,
+		Reports:        user.Reports,
 		TokenUuid:      td.AccessUuid,
 	}
 
