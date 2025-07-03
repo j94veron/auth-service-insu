@@ -17,4 +17,5 @@ type User struct {
 	UpdatedAt      time.Time `json:"updatedAt"`
 	OtherWarehouse string    `json:"otherWarehouse"`
 	Province       string    `json:"province"`
+	Reports        string    `json:"reports"`
 }

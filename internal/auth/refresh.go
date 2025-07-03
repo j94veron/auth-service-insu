@@ -45,6 +45,7 @@ func RefreshToken(w http.ResponseWriter, r *http.Request) {
 		Warehouse:      claims.Warehouse,
 		OtherWarehouse: claims.OtherWarehouse,
 		Province:       claims.Province,
+		Reports:        claims.Reports,
 	}
 
 	tokens, err := tokenService.GenerateTokens(&user) // Generar nuevos tokens

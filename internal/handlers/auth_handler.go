@@ -48,6 +48,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			"role":           user.Role.Name,
 			"otherWarehouse": user.OtherWarehouse,
 			"province":       user.Province,
+			"reports":        user.Reports,
 		},
 	})
 }
